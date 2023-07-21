@@ -1,25 +1,15 @@
-#![no_std] // disable standard library
-#![no_main] // disable main
+#![no_std]
+#![no_main]
 
-use core::panic::PanicInfo;
+use uefi::prelude::*;
 
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+#[entry]
+fn main(_image_handle: Handle, mut system_table: SystemTable<Boot>) -> Status {
+    // set memory allocator, initialize a logger and provide a panic handler
+    uefi_services::init(&mut system_table).unwrap();
+
+    log::info!("Hello world!");
+
+    system_table.boot_services().stall(10_000_000);
+    Status::SUCCESS
 }
-
-static HELLO: &[u8] = b"Hello World!";
-
-#[no_mangle] // disable name mangling
-pub extern "C" fn _start() -> ! {
-    let vga_buffer = 0xb8000 as *mut u8;
-
-    for (i, &byte) in HELLO.iter().enumerate() {
-        unsafe {
-            *vga_buffer.offset(i as isize * 2) = byte;
-            *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-        }
-    }
-    loop {}
-}
-
