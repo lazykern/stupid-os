@@ -4,14 +4,13 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Phusit Somboonyingsuk"]
 
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"
+[build-dependencies]
+bootloader = {version="0.11"}
+kernel = { path = "kernel", artifact = "bin", target = "x86_64-unknown-none"}
 
 [dependencies]
-log = "0.4.19"
-uefi = "0.24.0"
-uefi-services = "0.21.0"
+# used for UEFI booting in QEMU
+ovmf-prebuilt = "0.1.0-alpha.1"
 
+[workspace]
+members = ["kernel"]

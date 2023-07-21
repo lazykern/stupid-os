@@ -1,2 +1,5 @@
 [toolchain]
-targets = ["aarch64-unknown-uefi", "i686-unknown-uefi", "x86_64-unknown-uefi"]
+channel = "nightly"
+profile = "default"
+targets = ["x86_64-unknown-none"]
+components = ["rust-src", "llvm-tools-preview"]
